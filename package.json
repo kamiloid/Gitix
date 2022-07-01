@@ -1,0 +1,27 @@
+{
+  "name": "gitix",
+  "version": "1.0.0",
+  "description": "Git manager in terminal with GUI",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kamiloid/Gitix.git"
+  },
+  "keywords": [
+    "Git",
+    "Terminal",
+    "GUI"
+  ],
+  "author": "Kamiloid",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kamiloid/Gitix/issues"
+  },
+  "homepage": "https://github.com/kamiloid/Gitix#readme",
+  "dependencies": {
+    "kamiloid_cli_node": "^1.0.0"
+  }
+}
