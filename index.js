@@ -1,19 +1,20 @@
-/*jshint esversion: 8*/
-//const { Kix } = require('Kamiloid_cli_node');
-const { Kix } = require('../cli_node/index');
-const { CLI_Relast, Comps } = Kix; 
+/*jshint esversion:8*/
+const Kix = require('Kamiloid_cli_node');
+const { CLI_Relast, Comps, ARGS, DIR } = Kix; 
 const { Relast, Nav_System, Engine, Interact, Viewer, Comp, Log, Controls, Print } = CLI_Relast;
 
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
+const _pwd = ( ARGS || [] ).length === 0 ? DIR : ARGS[0];
+let _dir = _pwd;
 //--------------------------------------------------------------------------------------------------- 
-
 const Git =
 {
-    check_local_repo: ( cback ) =>
+    check_local_repo: ( cback, dir = undefined ) =>
     {
-        let cmd = `[ -d ".git" ] && echo "true"`;
+        let cd = `cd ${ dir || _dir } && `;
+        let cmd = `${ cd }[ -d ".git" ] && echo "true"`;
         exec( cmd, ( err, resp ) =>
         {
             let exist = Boolean(resp.replace(/\s/g, ''));
@@ -23,7 +24,8 @@ const Git =
     },
     init: ( cback ) =>
     {
-        let cmd = `git init`;
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git init`;
         exec( cmd, ( err, resp ) =>
         {
             if(cback)
@@ -32,15 +34,30 @@ const Git =
     },
     clone_repo: ( repo, cback ) =>
     {
-        let cmd = `git clone ${ repo }`;
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git clone ${ repo }`;
         exec( cmd, ( err, resp ) => {
+            let cloned = false;
+            let split = repo.split('/');
+            if(Array.isArray(split) && split.length > 0)
+            {
+                let repo_name = split[split.length - 1].replace('.git', '');
+                Git.check_local_repo( resp =>
+                    {
+                        cloned = resp.exist;
+                        if(cback)
+                            cback( { text: resp.text, cloned: cloned, repo: repo_name });
+                    }, `${ _pwd }/${ repo_name }`);
+                return;
+            }
             if(cback)
-                cback( { test: resp } );
+                cback( { text: resp, cloned: cloned } );
         });
     },
     branch: ( cback ) =>
     {
-        let cmd = `git branch`;
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git branch`;
         exec( cmd, ( err, resp ) =>
         {
             let buffer = [];
@@ -60,7 +77,8 @@ const Git =
     },
     status: ( cback ) =>
     {
-        let cmd = `git status -s`;
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git status -s`;
         exec( cmd, ( err, resp ) =>
         {
             let buffer = [];
@@ -89,7 +107,8 @@ const Git =
     },
     add_file: ( file, cback ) =>
     {
-        let cmd = `git add ${ file }`;
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git add ${ file }`;
         exec( cmd, ( err, resp ) =>
             {
                 if(cback) cback({ text: resp });
@@ -97,7 +116,8 @@ const Git =
     },
     add_all: ( cback ) =>
     {
-        let cmd = `git add .`;
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git add .`;
         exec( cmd, ( err, resp ) =>
             {
                 if(cback) cback({ text: resp });
@@ -105,7 +125,8 @@ const Git =
     },
     reset_file: ( file, cback ) =>
     {
-        let cmd = `git reset ${ file }`;
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git reset ${ file }`;
         exec( cmd, ( err, resp ) =>
             {
                 if(cback) cback({ text: resp });
@@ -113,7 +134,8 @@ const Git =
     },
     reset_all: ( cback ) =>
     {
-        let cmd = `git reset`;
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git reset`;
         exec( cmd, ( err, resp ) =>
             {
                 if(cback) cback({ text: resp });
@@ -337,7 +359,11 @@ const Git_Api =
                             return;
                         }
 
-                        Git.clone_repo( remote_repo, res => {
+                        Git.clone_repo( remote_repo, ( res ) => {
+                            if(res.cloned)
+                            {
+                                _dir = `${_pwd}/${res.repo}/`;
+                            }
                             preview.call_action(`change_content`, { title: args.item.label, content: Git_tools.text_format(res.text) });
                         });
                     });
@@ -424,7 +450,7 @@ const Git_tools =
 {
      text_format: (txt) =>
      {
-         let new_txt = txt;
+         let new_txt = txt || '';
          new_txt = new_txt.replace(/\n/g, Print.end_of_line() );
          return new_txt;
      }
@@ -700,7 +726,8 @@ class App extends Comp
     };
     draw = () =>
     {
-        return `[comp:navigation]
+        return `${ Print.subtitle( _dir, false ) }
+        [comp:navigation]
         ${ this.state(`show_preview`) ? `[comp:preview]` : `` }
         [comp:mode_control]`;
     };
@@ -716,3 +743,4 @@ CLI_Relast.run({
 }, App, (fw, app) =>
 {
 });
+

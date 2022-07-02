@@ -1,10 +1,14 @@
 {
   "name": "gitix",
-  "version": "1.0.0",
+  "version": "1.0.32",
   "description": "Git manager in terminal with GUI",
   "main": "index.js",
   "scripts": {
     "test": "node index.js"
+  },
+  "bin":{ 
+    "@kamiloid/gitix": "./bin/gitix",
+    "gitix": "./bin/gitix"
   },
   "repository": {
     "type": "git",
@@ -22,6 +26,6 @@
   },
   "homepage": "https://github.com/kamiloid/Gitix#readme",
   "dependencies": {
-    "kamiloid_cli_node": "^1.0.0"
+    "kamiloid_cli_node": "^0.0.5"
   }
 }
