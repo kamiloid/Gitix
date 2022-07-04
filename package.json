@@ -1,12 +1,12 @@
 {
   "name": "gitix",
-  "version": "1.0.32",
+  "version": "1.0.34",
   "description": "Git manager in terminal with GUI",
   "main": "index.js",
   "scripts": {
     "test": "node index.js"
   },
-  "bin":{ 
+  "bin": {
     "@kamiloid/gitix": "./bin/gitix",
     "gitix": "./bin/gitix"
   },

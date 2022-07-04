@@ -1,5 +1,5 @@
 /*jshint esversion:8*/
-const Kix = require('Kamiloid_cli_node');
+const Kix = require('kamiloid_cli_node');
 const { CLI_Relast, Comps, ARGS, DIR } = Kix; 
 const { Relast, Nav_System, Engine, Interact, Viewer, Comp, Log, Controls, Print } = CLI_Relast;
 
