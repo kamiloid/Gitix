@@ -1,14 +1,35 @@
 /*jshint esversion:8*/
 const Kix = require('kamiloid_cli_node');
 const { CLI_Relast, Comps, ARGS, DIR } = Kix; 
-const { Relast, Nav_System, Engine, Interact, Viewer, Comp, Log, Controls, Print } = CLI_Relast;
+//const { Relast, Nav_System, Engine, Interact, Viewer, Comp, Log, Controls, Print } = CLI_Relast;
+
+const Global = require('./src/core/global');
+const Git_Hook = require('./src/hooks/git');
+const { Nav_Manifest } = require('./src/config');
+const App = require('./src/main');
 
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
-const _pwd = ( ARGS || [] ).length === 0 ? DIR : ARGS[0];
-let _dir = _pwd;
+Global.setup( 
+    { 
+        dir: ( ARGS || [] ).length === 0 ? DIR : ARGS[0],
+        pwd: DIR, 
+        args: ARGS
+    } );
+
+CLI_Relast.run({
+    name: 'git_manager',
+    title: 'Git Manager',
+    api: Git_Hook,
+    manifest: Nav_Manifest,
+    debug: true
+}, App, (fw, app) =>
+{
+});
+
 //--------------------------------------------------------------------------------------------------- 
+/*
 const Git =
 {
     check_local_repo: ( cback, dir = undefined ) =>
@@ -142,8 +163,8 @@ const Git =
             });
     }
 };
-
-
+*/
+/*
 const Git_model =
 {
     Status:{
@@ -206,8 +227,8 @@ const Git_model =
         }
     }
 };
-
-
+*/
+/*
 const Controller =
 {
     App: {
@@ -226,7 +247,8 @@ const Controller =
         }
     }
 };
-
+*/
+/*
 const View_Config = {
     menu:{
         index: ' ',
@@ -300,7 +322,8 @@ const Nav_Manifest = {
         ]
     }
 };
-
+*/
+/*
 const Git_Api =
 {
     Global:
@@ -445,7 +468,8 @@ const Git_Api =
         }
     }
 };
-
+*/
+/*
 const Git_tools =
 {
      text_format: (txt) =>
@@ -455,7 +479,8 @@ const Git_tools =
          return new_txt;
      }
 }
-
+*/
+/*
 class Navigation extends Nav_System
 {
     constructor(props)
@@ -482,7 +507,8 @@ class Navigation extends Nav_System
             });
     }
 }
-
+*/
+/*
 class Preview extends Viewer
 {
     constructor(props)
@@ -510,7 +536,8 @@ class Preview extends Viewer
             });
     }
 }
-
+*/
+/*
 class Insert_mode extends Comp
 {
     constructor(props)
@@ -518,7 +545,8 @@ class Insert_mode extends Comp
         super(props);
     }
 }
-
+*/
+/*
 class Interaction_mode extends Nav_System
 {
     constructor(props)
@@ -556,7 +584,8 @@ class Interaction_mode extends Nav_System
             });
     }
 }
-
+*/
+/*
 class Mode_control extends Comp
 {
     constructor(props)
@@ -644,8 +673,8 @@ class Mode_control extends Comp
         return this.state(`mode`).trim() !== '' ? `[comp:${ this.state(`mode`) }]` : '';
     }
 }
-
-
+*/
+/*
 class App extends Comp
 {
     _comps_tabs = [`navigation`, `mode_control`];
@@ -732,15 +761,5 @@ class App extends Comp
         [comp:mode_control]`;
     };
 }
-
-
-CLI_Relast.run({
-    name: 'git_manager',
-    title: 'Git Manager',
-    api: Git_Api,
-    manifest: Nav_Manifest,
-    debug: true
-}, App, (fw, app) =>
-{
-});
+*/
 
