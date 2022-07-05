@@ -1,4 +1,5 @@
 /*jshint esversion: 8*/
+const Kix = require('kamiloid_cli_node');
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 const { _pwd, _dir } = require('../core/global');
@@ -47,6 +48,16 @@ const Git =
             if(cback)
                 cback( { text: resp, cloned: cloned } );
         });
+    },
+    current_branch: ( cback ) =>
+    {
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git branch --show-current`;
+        exec(cmd, ( err, res ) =>
+            {
+                if(cback)
+                    cback({ text: res });
+            });
     },
     branch: ( cback ) =>
     {
@@ -151,6 +162,19 @@ const Git =
         exec( cmd, ( err, res ) =>
             {
                 if(cback) cback({ text: res });
+            });
+    },
+    pull_current_branch: ( cback ) =>
+    {
+        let cd = `cd ${ _dir } && `;
+        Git.current_branch( res =>
+            {
+                let cmd = `${ cd }git pull origin ${ res.text }`;
+                exec( cmd, ( err, res2 ) =>
+                    {
+                        if(cback)
+                            cback({ text: res2 });
+                    });
             });
     }
 };

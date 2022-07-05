@@ -61,13 +61,24 @@ const Nav_Manifest = {
                 ]
             },
             {
-                name: 'commit',
+                name: 'commits',
                 label: 'Commits manager',
                 action: 'enter',
                 onOver: 'Api/Global/clear_preview',
                 tree: [
                     { name: 'new_commit', label: 'New commit', onOver: 'Api/Commit/is_commitable', onEnter: 'Api/Commit/new_commit' },
                     { name: 'commit_list', label: 'Commits', onEnter: 'Api/Commit/show_commit_list' }
+                ]
+            },
+            {
+                name: 'transfering',
+                label: 'Transfer manager',
+                action: 'enter',
+                onOver: 'Api/Global/clear_preview',
+                tree: [
+                    { name: 'fetch_all', label: 'Fetch all', onEnter: 'Api/Transaction/fetch_all' },
+                    { name: 'pull_branch', label: 'Pull branch', onEnter: 'Api/Transaction/pull_current_branch' },
+                    { name: 'push_branch', label: 'Push branch', onEnter: 'Api/Transaction/push_branch' }
                 ]
             }
         ]

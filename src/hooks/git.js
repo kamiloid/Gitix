@@ -178,6 +178,19 @@ const Git_Hook =
                         });
                 });
         }
+    },
+    Transaction:{
+        pull_current_branch: ( args ) =>
+        {
+            if(!args.app) return;
+            args.app.call_action(`toggle_preview`, true);
+            let preview = args.app.get_comp(`preview`);
+            preview.call_action(`change_content`, { title: 'Pull branch', content: `Pulling branch...` })
+            Git.pull_current_branch( res =>
+                {
+                    preview.call_action(`change_content`, { title: `Pull branch`, content: Tools.text_format(res.text) });
+                });
+        }
     }
 };
 
