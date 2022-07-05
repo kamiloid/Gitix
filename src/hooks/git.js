@@ -146,6 +146,16 @@ const Git_Hook =
                     Git_Hook.Status.load_status_files( args );
                 });
         }
+    },
+    Commit:{
+        new_commit: ( args ) =>
+        {
+            if(!args.app) return;
+            Git.commit( res =>
+                {
+                    Kix.Relast_CLI.Log(res);
+                });
+        }
     }
 };
 

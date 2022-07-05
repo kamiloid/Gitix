@@ -134,6 +134,15 @@ const Git =
             {
                 if(cback) cback({ text: resp });
             });
+    },
+    commit: ( message, cback ) =>
+    {
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git commit -m "${ message }"`;
+        exec( cmd, ( err, resp ) => 
+            {
+                if(cback) cback({ text: resp });
+            });
     }
 };
 
