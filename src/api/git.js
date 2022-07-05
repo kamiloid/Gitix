@@ -143,6 +143,15 @@ const Git =
             {
                 if(cback) cback({ text: resp });
             });
+    },
+    commits: ( cback ) =>
+    {
+        let cd = `cd ${ _dir } && `;
+        let cmd = `${ cd }git log --pretty=format:"%h %s" --graph`;
+        exec( cmd, ( err, res ) =>
+            {
+                if(cback) cback({ text: resp });
+            });
     }
 };
 

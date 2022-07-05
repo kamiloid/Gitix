@@ -11,6 +11,7 @@ const Git_Hook =
         clear_preview: (args) =>
         {
             if(!args.app) return;
+            args.app.call_action(`toggle_preview`, true);
             let preview = args.app.get_comp(`preview`);
             if(!preview) return;
             preview.call_action(`change_content`, { title: args.item.label, content: `` });
@@ -151,9 +152,19 @@ const Git_Hook =
         new_commit: ( args ) =>
         {
             if(!args.app) return;
-            Git.commit( res =>
+            let preview = args.app.get_comp(`preview`);
+            args.app.call_action(`toggle_preview`, true);
+            preview.call_action(`change_content`, { title: 'Commit', content: 'Insert commit message...' });
+            args.app.call_action(`insert_mode`, input =>
                 {
-                    Kix.Relast_CLI.Log(res);
+                    preview.call_action(`change_content`, { title: `Commit`, content: `Commiting changes...` });
+                    if(!input) return;
+                    if(!input.data) return;
+                    let message = input.data;
+                    Git.commit(message, res =>
+                        {
+                            preview.call_action(`change_content`, { title: `Commit`, content: Tools.text_format(res.text) });
+                        });
                 });
         }
     }
