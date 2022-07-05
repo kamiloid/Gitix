@@ -88,30 +88,6 @@ const Git =
         {
             if(cback)
                 cback(resp);
-            return;
-            let buffer = [];
-            buffer.staged = [];
-            buffer.untracked = [];
-            buffer.unstaged = [];
-
-            let split = resp.split(`\n`);
-            for(let i of split)
-            {
-                if(i.trim() === '') continue;
-                let file = i.trim();
-                let type_match = file.match(/[A\s|A\s\s\|\sM\s|M\s|M\s\s|MM\s|\?\?\s|D\s|D\s\s|DD\s]+/gm);
-                if(type_match.length <= 0) continue;
-                let type = type_match[0];
-                Kix.CLI_Relast.Log(type_match);
-                file = file.replace(type_match[0], '');
-                if( ([' m', 'mm ', ' d', 'dd ', ' m ']).includes(type.toLowerCase()) )
-                    buffer.unstaged.push( { name: file, type: type.trim() } );
-                else if( (['m ', 'd ', 'a ', 'a  ', 'd  ', 'm  ', 'am ']).includes(type.toLowerCase()) )
-                    buffer.staged.push( { name: file, type: type.trim() } );
-                else if( (['?? ', '??']).includes(type.toLowerCase()) )
-                    buffer.untracked.push( { name: file, type: type.trim() } );
-            }
-            if(cback) cback({ data: buffer, text: resp });
         } );
     },
     add_file: ( file, cback ) =>
