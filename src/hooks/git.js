@@ -3,6 +3,7 @@ const Global = require('../core/global');
 const Tools = require('../core/tools');
 const { _pwd } = Global;
 const Git = require('../api/git');
+const Git_model = require('../models/git');
 
 const Git_Hook =
 {
@@ -185,10 +186,21 @@ const Git_Hook =
             if(!args.app) return;
             args.app.call_action(`toggle_preview`, true);
             let preview = args.app.get_comp(`preview`);
-            preview.call_action(`change_content`, { title: 'Pull branch', content: `Pulling branch...` })
+            preview.call_action(`change_content`, { title: 'Pull branch', content: `Pulling branch from remote...` })
             Git.pull_current_branch( res =>
                 {
                     preview.call_action(`change_content`, { title: `Pull branch`, content: Tools.text_format(res.text) });
+                });
+        },
+        push_current_branch: ( args ) =>
+        {
+            if(!args.app) return;
+            args.app.call_action(`toggle_preview`, true);
+            let preview = args.app.get_comp(`preview`);
+            preview.call_action(`change_content`, { title: 'Push branch', content: `Pushing branch to remote...` })
+            Git.push_current_branch( res =>
+                {
+                    preview.call_action(`change_content`, { title: `Push branch`, content: Tools.text_format(res.text) });
                 });
         }
     }

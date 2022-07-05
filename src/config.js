@@ -77,8 +77,8 @@ const Nav_Manifest = {
                 onOver: 'Api/Global/clear_preview',
                 tree: [
                     { name: 'fetch_all', label: 'Fetch all', onEnter: 'Api/Transaction/fetch_all' },
-                    { name: 'pull_branch', label: 'Pull branch', onEnter: 'Api/Transaction/pull_current_branch' },
-                    { name: 'push_branch', label: 'Push branch', onEnter: 'Api/Transaction/push_branch' }
+                    { name: 'pull_branch_remote', label: 'Pull branch from remote', onEnter: 'Api/Transaction/pull_current_branch' },
+                    { name: 'push_branch_remote', label: 'Push branch to remote', onEnter: 'Api/Transaction/push_current_branch' }
                 ]
             }
         ]

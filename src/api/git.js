@@ -86,6 +86,9 @@ const Git =
         let cmd = `${ cd }git status -s`;
         exec( cmd, ( err, resp ) =>
         {
+            if(cback)
+                cback(resp);
+            return;
             let buffer = [];
             buffer.staged = [];
             buffer.untracked = [];
@@ -96,11 +99,12 @@ const Git =
             {
                 if(i.trim() === '') continue;
                 let file = i.trim();
-                let type_match = file.match(/[A\s|A\s\s\|M\s|M\s\s|MM\s|\?\?\s|D\s|D\s\s|DD\s]+/gm);
+                let type_match = file.match(/[A\s|A\s\s\|\sM\s|M\s|M\s\s|MM\s|\?\?\s|D\s|D\s\s|DD\s]+/gm);
                 if(type_match.length <= 0) continue;
                 let type = type_match[0];
+                Kix.CLI_Relast.Log(type_match);
                 file = file.replace(type_match[0], '');
-                if( ([' m', 'mm ', ' d', 'dd ']).includes(type.toLowerCase()) )
+                if( ([' m', 'mm ', ' d', 'dd ', ' m ']).includes(type.toLowerCase()) )
                     buffer.unstaged.push( { name: file, type: type.trim() } );
                 else if( (['m ', 'd ', 'a ', 'a  ', 'd  ', 'm  ', 'am ']).includes(type.toLowerCase()) )
                     buffer.staged.push( { name: file, type: type.trim() } );
@@ -170,6 +174,19 @@ const Git =
         Git.current_branch( res =>
             {
                 let cmd = `${ cd }git pull origin ${ res.text }`;
+                exec( cmd, ( err, res2 ) =>
+                    {
+                        if(cback)
+                            cback({ text: res2 });
+                    });
+            });
+    },
+    push_current_branch: ( cback ) =>
+    {
+        let cd = `cd ${ _dir } && `;
+        Git.current_branch( res =>
+            {
+                let cmd = `${ cd }git push origin ${ res.text }`;
                 exec( cmd, ( err, res2 ) =>
                     {
                         if(cback)

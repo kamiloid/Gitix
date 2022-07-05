@@ -65,7 +65,8 @@ class Mode_control extends Comp
     {
         this.action(`resp:git_status`, res =>
             {
-                let buffer = Git_model.Status.bind_ui_status(res);
+                let stages = Git_model.Status.str2buffer(res);
+                let buffer = Git_model.Status.bind_ui_status({ data: stages, text: res });
                 this.call_action(`set_mode`, `interaction_mode`);
                 this.call_action(`start_interaction`, { title: `Git status - Add files`, menu: buffer });
             });
