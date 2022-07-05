@@ -150,7 +150,7 @@ const Git =
         let cmd = `${ cd }git log --pretty=format:"%h %s" --graph`;
         exec( cmd, ( err, res ) =>
             {
-                if(cback) cback({ text: resp });
+                if(cback) cback({ text: res });
             });
     }
 };

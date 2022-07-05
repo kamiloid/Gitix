@@ -149,6 +149,17 @@ const Git_Hook =
         }
     },
     Commit:{
+        show_commit_list: ( args ) =>
+        {
+            if(!args.app) return;
+            let preview = args.app.get_comp(`preview`);
+            args.app.call_action(`toggle_preview`, true);
+            preview.call_action(`change_content`, { title: `Commits`, content: `Listing commits...` });
+            Git.commits( res =>
+                {
+                    preview.call_action(`change_content`, { title: `Commits`, content: Tools.text_format(res.text) });
+                });
+        },
         new_commit: ( args ) =>
         {
             if(!args.app) return;
